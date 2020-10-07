@@ -1,5 +1,12 @@
 import React, {Component} from 'react';
 import './Game.css'
+integratimport ReactGA from 'react-ga';
+
+const trackingId = "UA-179964815-1"; 
+ReactGA.initialize(trackingId);
+ReactGA.set({
+  userId: "sample_user_ID",
+})
 
 const CELL_SIZE = 20;
 const WIDTH = 800;  
@@ -36,11 +43,23 @@ class Game extends Component {
     }
 
     runGame = () => {
+        ReactGA.event({
+            category: "Controls",
+            action: "User pressed the run button.",
+            label: "run",
+            value: Date.now()
+          });
         this.setState({isRunning: true});
         this.runIteration();
     }
 
     stopGame = () => {
+        ReactGA.event({
+            category: "Controls",
+            action: "User pressed the stop button.",
+            label: "stop",
+            value: Date.now()
+          });
         this.setState({isRunning: false});
         if (this.timeoutHandler){
             window.clearTimeout(this.timeoutHandler);
@@ -100,6 +119,13 @@ class Game extends Component {
     }
 
     handleRandom = () => {
+        ReactGA.event({
+            category: "Controls",
+            action: "User pressed the random button.",
+            label: "random",
+            value: Date.now()
+          });
+
         for (let y = 0; y < this.rows; y++){
             for (let x = 0; x < this.cols; x++){
                 this.board[y][x] = (Math.random() >= 0.5);
@@ -109,6 +135,13 @@ class Game extends Component {
     }
 
     handleClear = () => {
+        ReactGA.event({
+            category: "Controls",
+            action: "User pressed the clear button.",
+            label: "clear",
+            value: Date.now()
+          });
+
         this.board = this.makeEmptyBoard();
         this.setState({cells: this.makeCells()});
     }
@@ -154,6 +187,12 @@ class Game extends Component {
 
         if (x >= 0 && x <= this.cols && y >= 0 && y <= this.rows){
             this.board[y][x] = !this.board[y][x];
+            ReactGA.event({
+                category: "Cell",
+                action: "User pressed the cell (" + x + ', ' + y + ")",
+                label: "(" + x + ', ' + y + ")",
+                value: Date.now()
+              });
         }
         console.log(this.state.cells)
         this.setState({cells: this.makeCells()});
